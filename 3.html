@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Affine</title>
+    <link rel="stylesheet" href="./style/3.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mã Affine</h1>
+
+        <div class="mode-selection">
+            <label><input type="radio" name="mode" value="encrypt" checked onclick="toggleButtons()">Mã hóa</label>
+            <label><input type="radio" name="mode" value="decrypt" onclick="toggleButtons()">Giải mã</label>
+        </div>
+
+        <label for="text">Văn bản (hoặc chọn file):</label>
+        <textarea id="text" rows="4" placeholder="Nhập văn bản"></textarea>
+
+        <label for="fileInput">Hoặc chọn file:</label>
+        <input type="file" id="fileInput" accept=".txt,.jpg,.jpeg,.png">
+
+        <label for="a">Giá trị a:</label>
+        <input type="number" id="a" placeholder="Nhập giá trị a" required>
+
+        <label for="b">Giá trị b:</label>
+        <input type="number" id="b" placeholder="Nhập giá trị b" required>
+
+        <button id="processButton" onclick="processInput()">Xử lý</button>
+
+        <label for="result">Kết quả:</label>
+        <textarea id="result" rows="5" readonly></textarea>
+
+        <div class="error" id="errorMessage"></div>
+    </div>
+
+    <script src ="./javascript/3.js">
+    </script>
+
+</body>
+</html>

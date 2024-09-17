@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>
+            Mã Hóa Dịch Vòng
+        </title>
+        <link rel="stylesheet" href="./style/1.css">
+    </head>
+    <body>
+        <div class="container">
+        <h1>Mã Dịch Vòng</h1>
+
+        <div class="mode-selection">
+            <label><input type="radio" name="mode" value="encrypt" checked onclick="toggleMode()">Mã hóa</label>
+            <label><input type="radio" name="mode" value="decrypt" onclick="toggleMode()">Giải mã</label>
+        </div>
+
+        <label for="inputText">Nhập văn bản:</label>
+        <textarea id="inputText" rows="5" placeholder="Nhập văn bản ở đây..."></textarea>
+
+        <label for="fileInput">Hoặc chọn file văn bản hoặc hình ảnh:</label>
+        <input type="file" id="fileInput" accept=".txt,.jpg,.jpeg,.png">
+
+        <label for="shift">Số dịch:</label>
+        <input type="number" id="shift" placeholder="Nhập số dịch" required>
+
+        <button id="processButton" onclick="processInput()">Xử lý</button>
+        <button id="saveButton" style="display:none;" onclick="saveFile()">Lưu file</button>
+
+        <label for="result">Kết quả:</label>
+        <textarea id="result" rows="5" readonly></textarea>
+
+        <div class="error" id="errorMessage"></div>
+    </div>
+
+
+    <script src ="./javascript/1.js">
+    </script>
+</body>
+</html>
+      

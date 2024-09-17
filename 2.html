@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Thay Thế</title>
+    <link rel ="stylesheet" href ="./style/2.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mã Thay Thế</h1>
+
+        <div class="mode-selection">
+            <label><input type="radio" name="mode" value="encrypt" checked>Mã hóa</label>
+            <label><input type="radio" name="mode" value="decrypt">Giải mã</label>
+        </div>
+
+        <label for="inputText">Nhập văn bản:</label>
+        <textarea id="inputText" rows="5" placeholder="Nhập văn bản ở đây..."></textarea>
+
+        <label for="fileInput">Hoặc chọn file:</label>
+        <input type="file" id="fileInput" accept=".txt, .jpg, .jpeg, .png">
+
+        <button onclick="processInput()">Xử lý</button>
+        <button id="saveButton" style="display:none;" onclick="showSaveDialog()">Lưu file</button>
+
+        <label for="result">Kết quả:</label>
+        <textarea id="result" rows="5" readonly></textarea>
+
+        <div class="error" id="errorMessage"></div>
+
+        <div id="saveDialog" style="display:none;">
+            <label for="fileName">Tên file:</label>
+            <input type="text" id="fileName" placeholder="Nhập tên file...">
+            <button onclick="saveToFile()">Lưu</button>
+        </div>
+    </div>
+
+    <script src = "./javascript/2.js">
+       
+    </script>
+</body>
+</html>
