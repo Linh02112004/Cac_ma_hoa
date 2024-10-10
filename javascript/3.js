@@ -1,3 +1,6 @@
+const chars = 'abcdefghijklmnopqrstuvwxyz@.-'; // Bảng ký tự với 29 ký tự
+const m = chars.length;
+
 function toggleButtons() {
     const mode = document.querySelector('input[name="mode"]:checked').value;
     document.getElementById('processButton').innerText = mode === 'encrypt' ? 'Mã hóa' : 'Giải mã';
@@ -27,11 +30,11 @@ function modInverse(a, m) {
 function affineEncrypt(text, a, b) {
     let encryptedText = '';
     for (let char of text) {
-        if (char.match(/[a-z]/i)) {
-            const shift = char === char.toUpperCase() ? 65 : 97;
-            encryptedText += String.fromCharCode((a * (char.charCodeAt(0) - shift) + b) % 26 + shift);
+        const index = chars.indexOf(char.toLowerCase());
+        if (index !== -1) {
+            encryptedText += chars[(a * index + b) % m];
         } else {
-            encryptedText += char;
+            encryptedText += char; // Giữ nguyên ký tự không hợp lệ
         }
     }
     return encryptedText;
@@ -39,17 +42,17 @@ function affineEncrypt(text, a, b) {
 
 function affineDecrypt(text, a, b) {
     let decryptedText = '';
-    const aInv = modInverse(a, 26);
+    const aInv = modInverse(a, m);
     if (aInv === null) {
-        return "Giá trị 'a' không coprime với 26.";
+        return "Giá trị 'a' không coprime với " + m + ".";
     }
 
     for (let char of text) {
-        if (char.match(/[a-z]/i)) {
-            const shift = char === char.toUpperCase() ? 65 : 97;
-            decryptedText += String.fromCharCode((aInv * ((char.charCodeAt(0) - shift) - b + 26)) % 26 + shift);
+        const index = chars.indexOf(char.toLowerCase());
+        if (index !== -1) {
+            decryptedText += chars[(aInv * (index - b + m)) % m];
         } else {
-            decryptedText += char;
+            decryptedText += char; // Giữ nguyên ký tự không hợp lệ
         }
     }
     return decryptedText;
@@ -90,8 +93,8 @@ async function processInput() {
         return;
     }
 
-    if (!isCoprime(a, 26)) {
-        errorMessage.textContent = "Giá trị 'a' và 26 không phải là số nguyên tố cùng nhau. Vui lòng nhập lại 'a'.";
+    if (!isCoprime(a, m)) {
+        errorMessage.textContent = "Giá trị 'a' và " + m + " không phải là số nguyên tố cùng nhau. Vui lòng nhập lại 'a'.";
         return;
     }
 
