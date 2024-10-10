@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính và Giải Mã MD5</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        #result, #decodeResult {
+            white-space: pre-wrap;
+            margin-top: 10px;
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Tính và Giải Mã MD5</h1>
+    
+    <h3>Tính Giá Trị Băm MD5</h3>
+    <input type="text" id="inputString" placeholder="Nhập văn bản để băm">
+    <button id="hashBtn">Tính Giá Trị Băm MD5</button>
+    <h3>Kết quả băm:</h3>
+    <pre id="result"></pre>
+
+    <h3>Giải Mã MD5</h3>
+    <input type="text" id="md5Hash" placeholder="Nhập giá trị băm MD5">
+    <button id="decodeBtn">Giải Mã</button>
+    <h3>Kết quả:</h3>
+    <pre id="decodeResult"></pre>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+    // Danh sách các chuỗi và giá trị băm tương ứng
+    const hashDatabase = new Map();
+
+    // Tính giá trị băm MD5
+    document.getElementById('hashBtn').addEventListener('click', function() {
+        const inputString = document.getElementById('inputString').value;
+        const hashedValue = CryptoJS.MD5(inputString).toString();
+        hashDatabase.set(hashedValue, inputString); // Lưu giá trị băm vào Map
+        document.getElementById('result').textContent = `Giá trị băm MD5: ${hashedValue}`;
+    });
+
+    // Giải mã giá trị băm MD5
+    document.getElementById('decodeBtn').addEventListener('click', function() {
+        const md5Hash = document.getElementById('md5Hash').value;
+        const decodedString = hashDatabase.get(md5Hash) || "Không tìm thấy chuỗi gốc.";
+        document.getElementById('decodeResult').textContent = `Chuỗi gốc: ${decodedString}`;
+    });
+</script>
+</body>
+</html>

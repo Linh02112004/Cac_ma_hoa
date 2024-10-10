@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Encryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .tab {
+            display: none;
+        }
+        .tab.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            padding: 10px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .tab-button:hover {
+            background: #0056b3;
+        }
+        textarea, input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mã hóa RSA</h1>
+        <div class="tabs">
+            <button class="tab-button" onclick="showTab('encrypt')">Mã hóa</button>
+            <button class="tab-button" onclick="showTab('decrypt')">Giải mã</button>
+        </div>
+
+        <div id="encrypt" class="tab active">
+            <h3>Nhập khóa công khai</h3>
+            <input type="number" id="publicE" placeholder="Nhập e" />
+            <input type="number" id="publicN" placeholder="Nhập n" />
+            <textarea id="message" placeholder="Nhập thông điệp..."></textarea>
+            <button onclick="encryptMessage()">Mã hóa</button>
+            <textarea id="ciphertext" placeholder="Thông điệp đã mã hóa..." readonly></textarea>
+            <button onclick="download('ciphertext')">Tải xuống thông điệp đã mã hóa</button>
+        </div>
+
+        <div id="decrypt" class="tab">
+            <h3>Nhập khóa riêng</h3>
+            <input type="number" id="privateD" placeholder="Nhập d" />
+            <input type="number" id="privateN" placeholder="Nhập n" />
+            <textarea id="ciphertextDecrypt" placeholder="Nhập thông điệp đã mã hóa..." ></textarea>
+            <button onclick="decryptMessage()">Giải mã</button>
+            <textarea id="decrypted" placeholder="Thông điệp đã giải mã..." readonly></textarea>
+            <button onclick="download('decrypted')">Tải xuống thông điệp đã giải mã</button>
+        </div>
+    </div>
+
+    <script>
+        let publicKey = {};
+        let privateKey = {};
+
+        function showTab(tab) {
+            const encryptTab = document.getElementById('encrypt');
+            const decryptTab = document.getElementById('decrypt');
+            if (tab === 'encrypt') {
+                encryptTab.classList.add('active');
+                decryptTab.classList.remove('active');
+            } else {
+                decryptTab.classList.add('active');
+                encryptTab.classList.remove('active');
+            }
+        }
+
+        function updateKeys() {
+            publicKey.e = parseInt(document.getElementById('publicE').value);
+            publicKey.n = parseInt(document.getElementById('publicN').value);
+            privateKey.d = parseInt(document.getElementById('privateD').value);
+            privateKey.n = parseInt(document.getElementById('privateN').value);
+        }
+
+        function encryptMessage() {
+            updateKeys();
+            const message = document.getElementById('message').value;
+            const ciphertext = Array.from(message).map(char => {
+                return Math.pow(char.charCodeAt(0), publicKey.e) % publicKey.n;
+            });
+            document.getElementById('ciphertext').value = ciphertext.join(', ');
+        }
+
+        function decryptMessage() {
+            updateKeys();
+            const ciphertext = document.getElementById('ciphertextDecrypt').value.split(', ').map(Number);
+            const decrypted = ciphertext.map(num => {
+                return String.fromCharCode(Math.pow(num, privateKey.d) % privateKey.n);
+            }).join('');
+            document.getElementById('decrypted').value = decrypted;
+        }
+
+        function download(elementId) {
+            const content = document.getElementById(elementId).value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${elementId}.txt`; // Bạn có thể thay đổi đuôi file tại đây
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
