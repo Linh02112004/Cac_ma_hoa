@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã hóa và Giải mã AES-128</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .tab {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .tab-links {
+            display: flex;
+            justify-content: space-between;
+        }
+        .tab-links button {
+            flex: 1;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mã hóa và Giải mã AES-128</h1>
+    <div class="tab-links">
+        <button onclick="showTab('encryptTab')">Mã hóa</button>
+        <button onclick="showTab('decryptTab')">Giải mã</button>
+    </div>
+
+    <div id="encryptTab" class="tab active">
+        <h2>Mã hóa</h2>
+        <label for="key">Khóa (16 ký tự):</label>
+        <input type="text" id="key" maxlength="16" required>
+        
+        <label for="plainText">Văn bản gốc:</label>
+        <input type="text" id="plainText" required>
+        
+        <label for="fileInput">Chọn file (.txt):</label>
+        <input type="file" id="fileInput" accept=".txt">
+        
+        <button onclick="encryptFile()">Mã hóa và Lưu File</button>
+        <h3>Kết quả mã hóa:</h3>
+        <p id="cipherText"></p>
+    </div>
+
+    <div id="decryptTab" class="tab">
+        <h2>Giải mã</h2>
+        <label for="keyDecrypt">Khóa (16 ký tự):</label>
+        <input type="text" id="keyDecrypt" maxlength="16" required>
+        
+        <label for="cipherTextInput">Cipher Text:</label>
+        <input type="text" id="cipherTextInput" required>
+        
+        <label for="cipherFileInput">Chọn file đã mã hóa (.dat):</label>
+        <input type="file" id="cipherFileInput" accept=".dat">
+        
+        <button onclick="decryptFile()">Giải mã và Hiển thị</button>
+        <h3>Kết quả giải mã:</h3>
+        <p id="decryptedText"></p>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function encryptFile() {
+            const key = document.getElementById('key').value;
+            const plainText = document.getElementById('plainText').value;
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            let textToEncrypt = plainText;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    textToEncrypt = event.target.result;
+                    const cipherText = CryptoJS.AES.encrypt(textToEncrypt, key).toString();
+                    document.getElementById('cipherText').innerText = cipherText;
+
+                    // Lưu file .dat
+                    const blob = new Blob([cipherText], { type: 'application/octet-stream' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'encrypted.dat';
+                    a.click();
+                };
+                reader.readAsText(file);
+            } else {
+                const cipherText = CryptoJS.AES.encrypt(plainText, key).toString();
+                document.getElementById('cipherText').innerText = cipherText;
+
+                // Lưu file .dat
+                const blob = new Blob([cipherText], { type: 'application/octet-stream' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'encrypted.dat';
+                a.click();
+            }
+        }
+
+        function decryptFile() {
+            const key = document.getElementById('keyDecrypt').value;
+            const cipherFileInput = document.getElementById('cipherFileInput');
+            const file = cipherFileInput.files[0];
+
+            let cipherText;
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    cipherText = event.target.result;
+                    const bytes = CryptoJS.AES.decrypt(cipherText, key);
+                    const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+                    document.getElementById('decryptedText').innerText = decryptedText || "Giải mã thất bại!";
+                };
+                reader.readAsText(file);
+            } else {
+                cipherText = document.getElementById('cipherTextInput').value;
+                const bytes = CryptoJS.AES.decrypt(cipherText, key);
+                const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+                document.getElementById('decryptedText').innerText = decryptedText || "Giải mã thất bại!";
+            }
+        }
+    </script>
+
+</body>
+</html>
